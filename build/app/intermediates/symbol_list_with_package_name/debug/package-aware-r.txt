@@ -1,4 +1,4 @@
-com.example.cart
+com.example.flutter_application_1
 attr activityAction
 attr activityName
 attr alpha

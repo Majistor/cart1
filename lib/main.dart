@@ -1,50 +1,97 @@
-// ignore_for_file: prefer_const_constructors
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/GridProdcuts.dart';
+import 'package:flutter_application_1/Product.dart';
+import 'package:flutter_application_1/Products.dart';
+import 'package:flutter_application_1/cartProduct.dart';
+import 'package:flutter_application_1/cartScreen.dart';
 import 'package:provider/provider.dart';
-import 'package:simple_shop_app/Providers/cart_provider/cart_provider.dart';
-import 'package:simple_shop_app/Providers/orders_provider/orders.dart';
-import 'package:simple_shop_app/Providers/product_provider/ProductsPrvider.dart';
-import 'package:simple_shop_app/screens/cart_screen.dart';
-import 'screens/MainShoppingScreen.dart';
-import 'screens/ProductDetailsScreen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (BuildContext context) => Products()),
-        ChangeNotifierProvider(create: (BuildContext context) => Cart()),
-        ChangeNotifierProvider(create: (BuildContext context) => Orders()),
+        ChangeNotifierProvider(
+          create: (context) => Products(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => cartProduct(),
+        )
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(colorSchemeSeed: Colors.pinkAccent),
-        title: 'Flutter Demo',
-        home: const MyHomePage(),
-        routes: {
-          MainShoppingScreen.id: (c) => MainShoppingScreen(),
-          ProductDetailsScreen.id: (c) => ProductDetailsScreen(),
-          CartScreen.id: (c) => CartScreen(),
-        },
-      ),
+          theme: ThemeData(
+            colorSchemeSeed: Colors.redAccent,
+            scaffoldBackgroundColor: Color.fromARGB(255, 253, 103, 103),
+          ),
+          title: 'shopping app',
+          routes: {
+            "/": (context) => Homepage(),
+            "cart": (context) => cartScreen(),
+          }),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class Homepage extends StatelessWidget {
+  const Homepage({Key? key}) : super(key: key);
 
-  @override
   Widget build(BuildContext context) {
-    return MainShoppingScreen();
+    final productDate = Provider.of<Products>(context);
+    final products = productDate.products;
+    return SafeArea(
+        child: Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Welcome',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "cart");
+                    },
+                    icon: Icon(
+                      CupertinoIcons.cart_fill,
+                      color: Colors.white,
+                    ))
+              ],
+              backgroundColor: const Color.fromARGB(255, 250, 117, 117),
+            ),
+            body: Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 245, 243, 243),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              child: GridView.builder(
+                  itemCount: 14,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.68,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10),
+                  itemBuilder: (context, index) {
+                    return ChangeNotifierProvider<Product>.value(
+                      value: products[index],
+                      child: GridProducts(
+                          //  name: products[index].name,
+                          //image: products[index].image,
+                          //price: products[index].price,
+
+                          ),
+                    );
+                  }),
+            )));
   }
 }

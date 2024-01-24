@@ -1,10 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="cart"
+        android:label="flutter_application_1"
         android:name="${applicationName}"
-        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher">
-        
         <activity
             android:name=".MainActivity"
             android:exported="true"
